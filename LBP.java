@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 
 public class bmpToH {
 	public static void main(String[] args) throws IOException {
-		File bmpFile = new File("D:\\Eclipde workspace\\IC\\src\\cow.png");//your image file address
+		File bmpFile = new File("D:\\Eclipde workspace\\IC\\src\\chika.png");
 		BufferedImage image = ImageIO.read(bmpFile);
 
 		FileWriter pattern = new FileWriter("pattern3.dat");
@@ -27,22 +27,17 @@ public class bmpToH {
 		Raster raster = image.getData();
 		for (int j = 0; j < image.getWidth(); j++) {
 			for (int k = 0; k < image.getHeight(); k++) {
-				Color c = new Color(image.getRGB(j, k));
-				int red = (int) (c.getRed() * 0.299);
-				int green = (int) (c.getGreen() * 0.587);
-				int blue = (int) (c.getBlue() * 0.114);
-				Color newColor = new Color(red + green + blue,
 
-						red + green + blue, red + green + blue);
 
-				int grayLevelPixel = raster.getSample(j, k, 0);
+				int grayLevelPixel = raster.getSample(j, k, 0);//get the 8 bit gray value 
 
 				array2D[j][k] = grayLevelPixel;
 				Color Color = new Color(grayLevelPixel, grayLevelPixel, grayLevelPixel);
 
+
 				String pp = "%02X      //Pixel %d: %03d\n";
 				String ppp = String.format(pp, grayLevelPixel, pixel++, grayLevelPixel);
-				
+				// System.out.printf("%s",ppp);
 
 				pattern.write(ppp);
 			}
@@ -71,7 +66,7 @@ public class bmpToH {
 				temp[6] = array2D[cx - 1][cy + 1];
 				temp[7] = array2D[cx][cy + 1];
 				temp[8] = array2D[cx + 1][cy + 1];
-			
+				
 
 				temp[0] = (temp[0] < temp[4]) ? 0 : 1;
 				temp[1] = (temp[1] < temp[4]) ? 0 : 1;
@@ -95,7 +90,7 @@ public class bmpToH {
 				result[pixel++] = temp[0] + temp[1] + temp[2] + temp[3] + temp[5] + temp[6] + temp[7] + temp[8];
 				
 			}
-
+			
 
 			if (result[pixel - 1] == 0)
 				++zero;
@@ -113,17 +108,18 @@ public class bmpToH {
 		for (int x = 0; x < image.getWidth() * image.getHeight(); x++) {
 
 			Color newColor = new Color(result[x], result[x], result[x]);
-			img.setRGB(x % image.getWidth(), x / image.getHeight(), newColor.getRGB());
+			img.setRGB(x % image.getWidth(), x / image.getWidth(), newColor.getRGB());
 			String pp = "%02X      //Pixel %d: %03d\n";
 			String ppp = String.format(pp, result[x], x, result[x]);
 			golden.write(ppp);
 
 		}
-
+		
 		golden.flush();
 		golden.close();
-		f = new File("D:\\Eclipde workspace\\IC\\src\\out.bmp");
-		ImageIO.write(img, "bmp", f);
-		
+		f = new File("D:\\Eclipde workspace\\IC\\src\\out.png");
+		ImageIO.write(img, "png", f);
+		System.out.println("Hello, World!");
+		System.out.println(result[129]);
 	}
 }
